@@ -1,0 +1,16 @@
+# Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/.env
+frontend/.env.local
+
+# Backend
+backend/venv/
+backend/__pycache__/
+backend/.env
+backend/happychurch.db
+backend/uploads/
+
+# OS/Editor
+.DS_Store
+.vscode/

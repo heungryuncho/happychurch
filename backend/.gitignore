@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environment
+venv/
+.venv/
+
+# Environment variables (중요: 비밀번호, 시크릿 키 포함)
+.env
+.env.*
+
+# Database
+*.db
+
+# Uploads (배포 시 별도 스토리지 사용)
+uploads/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

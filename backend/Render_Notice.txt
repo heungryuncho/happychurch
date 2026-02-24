@@ -1,0 +1,4 @@
+# [중요] Render 환경 변수 설정
+Render에서 Web Service를 생성할 때 `Environment Variables` 탭에 다음을 반드시 추가하세요.
+* KEY: SECRET_KEY
+* VALUE: (개발 시 사용하던 암호화 키, 없으면 무작위 문자열 추천)
