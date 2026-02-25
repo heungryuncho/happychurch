@@ -5,7 +5,12 @@ import { useAuthStore } from '@/store/useAuthStore';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
 export const getBaseUrl = () => {
-  return API_URL.replace('/api/v1', '');
+  try {
+    const url = new URL(API_URL);
+    return url.origin; // e.g., "https://happychurch-production.up.railway.app"
+  } catch (e) {
+    return "http://localhost:8000";
+  }
 };
 
 export const api = axios.create({
