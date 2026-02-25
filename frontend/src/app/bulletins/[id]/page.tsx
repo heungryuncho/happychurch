@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { format } from 'date-fns';
-import { api } from '@/lib/api';
+import { api, getBaseUrl } from '@/lib/api';
 import { useAuthStore } from '@/store/useAuthStore';
 import { Edit, Trash2, ArrowLeft, Download, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -58,11 +58,11 @@ export default function BulletinDetailPage() {
     if (!bulletin) return null;
 
     const imageUrls = bulletin.file_urls
-        .map(url => url.startsWith('http') ? url : `http://localhost:8000${url}`)
+        .map(url => url.startsWith('http') ? url : `${getBaseUrl()}${url}`)
         .filter(url => /\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(url));
 
     const allFileUrls = bulletin.file_urls.map(url =>
-        url.startsWith('http') ? url : `http://localhost:8000${url}`
+        url.startsWith('http') ? url : `${getBaseUrl()}${url}`
     );
 
     return (

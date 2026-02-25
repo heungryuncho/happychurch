@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { format } from 'date-fns';
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/store/useAuthStore';
-import { Edit, Trash2, ArrowLeft, Eye, Calendar } from 'lucide-react';
+import { Edit, Trash2, ArrowLeft, Calendar } from 'lucide-react';
 
 interface Notice {
     id: number;
@@ -70,7 +70,6 @@ export default function NoticeDetailPage() {
                     <h1 className="text-2xl font-bold text-gray-900 mb-4">{notice.title}</h1>
                     <div className="flex items-center text-sm text-gray-400 space-x-5">
                         <span className="flex items-center"><Calendar className="w-3.5 h-3.5 mr-1.5" />{format(new Date(notice.created_at), 'yyyy-MM-dd HH:mm')}</span>
-                        <span className="flex items-center"><Eye className="w-3.5 h-3.5 mr-1.5" />{notice.views}</span>
                     </div>
                 </div>
 

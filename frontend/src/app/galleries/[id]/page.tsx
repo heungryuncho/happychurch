@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { format } from 'date-fns';
-import { api } from '@/lib/api';
+import { api, getBaseUrl } from '@/lib/api';
 import { useAuthStore } from '@/store/useAuthStore';
 import { Edit, Trash2, ArrowLeft, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -58,7 +58,7 @@ export default function GalleryDetailPage() {
     if (!gallery) return null;
 
     const imageUrls = gallery.image_urls.map(url =>
-        url.startsWith('http') ? url : `http://localhost:8000${url}`
+        url.startsWith('http') ? url : `${getBaseUrl()}${url}`
     );
 
     return (

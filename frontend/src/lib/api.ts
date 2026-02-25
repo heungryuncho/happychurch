@@ -4,6 +4,10 @@ import { useAuthStore } from '@/store/useAuthStore';
 // We assume the backend is running on localhost:8000
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
+export const getBaseUrl = () => {
+  return API_URL.replace('/api/v1', '');
+};
+
 export const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -17,7 +21,7 @@ api.interceptors.request.use(
     // Attempt to retrieve token from zustand store
     const token = useAuthStore.getState().token;
     if (token && config.headers) {
-        config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -34,10 +38,10 @@ apiForm.interceptors.request.use(
   (config) => {
     const token = useAuthStore.getState().token;
     if (token && config.headers) {
-        config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     // Let the browser set the boundary for multipart forms
-    if(config.headers) {
+    if (config.headers) {
       delete config.headers['Content-Type'];
     }
     return config;
