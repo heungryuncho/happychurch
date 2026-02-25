@@ -5,6 +5,8 @@ from datetime import datetime, date
 from typing import Any, List, Optional
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Form
 from sqlmodel import select, desc, func
+from PIL import Image
+import io
 
 from api.deps import SessionDep, CurrentAdmin
 from models.bulletin import Bulletin
@@ -12,6 +14,50 @@ from models.bulletin import Bulletin
 router = APIRouter()
 UPLOAD_DIR = "uploads/bulletins"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+MAX_IMAGE_SIZE = (1200, 1200)
+
+def process_and_save_upload(upload_file: UploadFile) -> str:
+    """파일이 이미지일 경우 리사이징하고, 문서 등 일반 파일은 해시된 이름으로 그대로 저장"""
+    ext = os.path.splitext(upload_file.filename)[1].lower() if upload_file.filename else ".file"
+    filename = f"{datetime.now().strftime('%Y%m%d%H%M%S%f')}{ext}"
+    file_path = os.path.join(UPLOAD_DIR, filename)
+    file_data = upload_file.file.read()
+
+    # 이미지 파일 형식인지 확인하여 리사이징 시도
+    if ext in [".jpg", ".jpeg", ".png", ".webp", ".heic"]:
+        # 리사이징 오류 처리를 위해 try-except 블록 사용
+        try:
+            img = Image.open(io.BytesIO(file_data))
+            
+            # EXIF 정보 보존 (회전 방지)
+            try:
+                from PIL import ImageOps
+                img = ImageOps.exif_transpose(img)
+            except Exception:
+                pass
+                
+            if img.mode in ("RGBA", "P"):
+                img = img.convert("RGB")
+                
+            img.thumbnail(MAX_IMAGE_SIZE, Image.Resampling.LANCZOS)
+            
+            # WebP 포맷 또는 JPEG 압축률 높게
+            save_format = "WEBP" if ext == ".webp" else "JPEG"
+            if ext not in [".jpg", ".jpeg", ".png", ".webp"]:
+                save_format = "JPEG"
+                file_path = os.path.splitext(file_path)[0] + ".jpg"
+                
+            img.save(file_path, format=save_format, quality=85, optimize=True)
+            return f"/{file_path}"
+        except Exception as e:
+            print(f"이미지 변환 실패: {e}, 원본으로 저장 시도합니다.")
+            
+    # 문서 파일(PDF 등)이거나 이미지 변환에 실패한 경우 원본 저장
+    with open(file_path, "wb") as buffer:
+        buffer.write(file_data)
+        
+    return f"/{file_path}"
 
 @router.get("/")
 def read_bulletins(
@@ -69,10 +115,8 @@ def create_bulletin(
     saved_urls = []
     for f in files:
         if f.filename:
-            file_path = os.path.join(UPLOAD_DIR, f"{datetime.now().strftime('%Y%m%d%H%M%S%f')}_{f.filename}")
-            with open(file_path, "wb") as buffer:
-                shutil.copyfileobj(f.file, buffer)
-            saved_urls.append(f"/{file_path}")
+            saved_url = process_and_save_upload(f)
+            saved_urls.append(saved_url)
         
     bulletin = Bulletin(
         title=title,
@@ -105,10 +149,8 @@ def update_bulletin(
     if new_files:
         saved_urls = []
         for f in new_files:
-            file_path = os.path.join(UPLOAD_DIR, f"{datetime.now().strftime('%Y%m%d%H%M%S%f')}_{f.filename}")
-            with open(file_path, "wb") as buffer:
-                shutil.copyfileobj(f.file, buffer)
-            saved_urls.append(f"/{file_path}")
+            saved_url = process_and_save_upload(f)
+            saved_urls.append(saved_url)
         bulletin.file_urls = json.dumps(saved_urls)
         
     bulletin.updated_at = datetime.utcnow()
