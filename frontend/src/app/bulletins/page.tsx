@@ -36,7 +36,7 @@ export default function BulletinListPage() {
             if (searchParams.startDate) params.start_date = searchParams.startDate;
             if (searchParams.endDate) params.end_date = searchParams.endDate;
 
-            const response = await api.get('/bulletins', { params });
+            const response = await api.get('/bulletins/', { params });
             setBulletins(response.data.items);
             setTotalCount(response.data.total);
         } catch (error) {

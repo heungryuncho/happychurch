@@ -36,7 +36,7 @@ export default function NoticeListPage() {
             if (searchParams.startDate) params.start_date = searchParams.startDate;
             if (searchParams.endDate) params.end_date = searchParams.endDate;
 
-            const response = await api.get('/notices', { params });
+            const response = await api.get('/notices/', { params });
             setNotices(response.data.items);
             setTotalCount(response.data.total);
         } catch (error) {

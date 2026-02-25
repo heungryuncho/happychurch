@@ -37,7 +37,7 @@ export default function GalleryListPage() {
             if (searchParams.startDate) params.start_date = searchParams.startDate;
             if (searchParams.endDate) params.end_date = searchParams.endDate;
 
-            const response = await api.get('/galleries', { params });
+            const response = await api.get('/galleries/', { params });
             setGalleries(response.data.items);
             setTotalCount(response.data.total);
         } catch (error) {
