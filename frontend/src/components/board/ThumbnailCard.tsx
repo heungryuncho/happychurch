@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import { useState } from 'react';
+import { getBaseUrl } from '@/lib/api';
 
 interface ThumbnailCardProps {
     id: number;
@@ -10,7 +11,7 @@ interface ThumbnailCardProps {
 }
 
 export default function ThumbnailCard({ title, imageUrl, date, onClick }: ThumbnailCardProps) {
-    const displayImage = imageUrl ? (imageUrl.startsWith('http') ? imageUrl : `http://localhost:8000${imageUrl}`) : null;
+    const displayImage = imageUrl ? (imageUrl.startsWith('http') ? imageUrl : `${getBaseUrl()}${imageUrl}`) : null;
     const [loaded, setLoaded] = useState(false);
 
     return (

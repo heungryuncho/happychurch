@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { api, apiForm } from '@/lib/api';
+import { api, apiForm, getBaseUrl } from '@/lib/api';
 import BoardForm from '@/components/board/BoardForm';
 import { useAuthStore } from '@/store/useAuthStore';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
@@ -137,7 +137,7 @@ export default function GalleryEditPage() {
                             </p>
                             <div className="flex gap-2 flex-wrap">
                                 {existingUrls.map((url, i) => {
-                                    const fullUrl = url.startsWith('http') ? url : `http://localhost:8000${url}`;
+                                    const fullUrl = url.startsWith('http') ? url : `${getBaseUrl()}${url}`;
                                     return (
                                         <img key={i} src={fullUrl} alt={`기존 사진 ${i + 1}`}
                                             className="w-16 h-16 object-cover rounded-lg border border-blue-200" />
