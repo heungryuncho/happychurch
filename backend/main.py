@@ -26,7 +26,8 @@ app = FastAPI(
 # Set all CORS enabled origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # NEXTJS 도메인 발급 시 수정 필요 ["https://happychurch-frontend.vercel.app"]
+    allow_origins=["http://localhost:3000", "http://localhost:3001"], 
+    allow_origin_regex="https://happychurch.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
