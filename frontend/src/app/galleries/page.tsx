@@ -91,10 +91,11 @@ export default function GalleryListPage() {
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                            {galleries.map((item) => (
+                            {galleries.map((item, index) => (
                                 <ThumbnailCard
                                     key={item.id}
                                     id={item.id}
+                                    displayId={totalCount - (currentPage - 1) * itemsPerPage - index}
                                     title={item.title}
                                     imageUrl={item.image_url}
                                     date={item.created_at}

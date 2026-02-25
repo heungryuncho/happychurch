@@ -93,6 +93,7 @@ export default function NoticeListPage() {
                         data={notices}
                         columns={columns}
                         basePath="/notices"
+                        startIndex={totalCount - (currentPage - 1) * itemsPerPage}
                         onRowClick={(item) => router.push(`/notices/${item.id}`)}
                     />
                     <Pagination

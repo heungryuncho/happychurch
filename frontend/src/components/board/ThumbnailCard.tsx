@@ -4,13 +4,14 @@ import { getBaseUrl } from '@/lib/api';
 
 interface ThumbnailCardProps {
     id: number;
+    displayId?: number;
     title: string;
     imageUrl?: string | null;
     date: string;
     onClick: () => void;
 }
 
-export default function ThumbnailCard({ title, imageUrl, date, onClick }: ThumbnailCardProps) {
+export default function ThumbnailCard({ id, displayId, title, imageUrl, date, onClick }: ThumbnailCardProps) {
     const displayImage = imageUrl ? (imageUrl.startsWith('http') ? imageUrl : `${getBaseUrl()}${imageUrl}`) : null;
     const [loaded, setLoaded] = useState(false);
 
@@ -45,7 +46,12 @@ export default function ThumbnailCard({ title, imageUrl, date, onClick }: Thumbn
             </div>
             <div className="p-5 flex-grow flex flex-col justify-between">
                 <h3 className="font-bold text-gray-900 text-base mb-2 line-clamp-2 group-hover:text-[var(--primary)] transition-colors duration-200">
-                    {title}
+                    {displayId !== undefined && (
+                        <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-500 mr-2 align-middle">
+                            No.{displayId}
+                        </span>
+                    )}
+                    <span className="align-middle">{title}</span>
                 </h3>
                 <p className="text-xs text-gray-400 mt-auto">
                     {format(new Date(date), 'yyyy. MM. dd.')}

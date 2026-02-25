@@ -93,6 +93,7 @@ export default function BulletinListPage() {
                         data={bulletins}
                         columns={columns}
                         basePath="/bulletins"
+                        startIndex={totalCount - (currentPage - 1) * itemsPerPage}
                         onRowClick={(item) => router.push(`/bulletins/${item.id}`)}
                     />
                     <Pagination

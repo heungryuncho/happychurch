@@ -12,12 +12,14 @@ interface BoardTableProps<T> {
     columns: Column<T>[];
     onRowClick?: (item: T) => void;
     basePath: string;
+    startIndex?: number;
 }
 
 export default function BoardTable<T extends { id: number; created_at: string }>({
     data,
     columns,
     onRowClick,
+    startIndex,
 }: BoardTableProps<T>) {
 
     return (
@@ -47,7 +49,7 @@ export default function BoardTable<T extends { id: number; created_at: string }>
                             </td>
                         </tr>
                     ) : (
-                        data.map((item) => (
+                        data.map((item, index) => (
                             <tr
                                 key={item.id}
                                 className="hover:bg-[var(--primary)]/[0.03] transition-all duration-200 cursor-pointer group"
@@ -58,9 +60,11 @@ export default function BoardTable<T extends { id: number; created_at: string }>
                                         {col.render ? col.render(item) : (
                                             col.key === 'created_at'
                                                 ? <span className="text-gray-400">{format(new Date(item.created_at), 'yyyy-MM-dd')}</span>
-                                                : col.key === 'title'
-                                                    ? <span className="font-medium group-hover:text-[var(--primary)] transition-colors duration-200">{String(item[col.key as keyof T] || '')}</span>
-                                                    : <span className="text-gray-500">{String(item[col.key as keyof T] || '')}</span>
+                                                : col.key === 'id' && startIndex !== undefined
+                                                    ? <span className="text-gray-500 font-medium">{startIndex - index}</span>
+                                                    : col.key === 'title'
+                                                        ? <span className="font-medium group-hover:text-[var(--primary)] transition-colors duration-200">{String(item[col.key as keyof T] || '')}</span>
+                                                        : <span className="text-gray-500">{String(item[col.key as keyof T] || '')}</span>
                                         )}
                                     </td>
                                 ))}
