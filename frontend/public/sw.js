@@ -33,16 +33,16 @@ self.addEventListener('activate', (event) => {
 
 // 네트워크 우선, 실패 시 캐시 사용 (Network First 전략)
 self.addEventListener('fetch', (event) => {
-    // API 요청은 캐싱하지 않음
-    if (event.request.url.includes('/api/')) {
+    // API 요청이나 http/https가 아닌 요청(chrome-extension 등)은 캐싱하지 않음
+    if (event.request.url.includes('/api/') || !event.request.url.startsWith('http')) {
         return;
     }
 
     event.respondWith(
         fetch(event.request)
             .then((response) => {
-                // 성공한 응답을 캐시에 저장
-                if (response.status === 200) {
+                // 성공한 응답만 캐시에 저장
+                if (response && response.status === 200 && response.type === 'basic') {
                     const responseClone = response.clone();
                     caches.open(CACHE_NAME).then((cache) => {
                         cache.put(event.request, responseClone);
