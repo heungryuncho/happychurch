@@ -5,6 +5,8 @@ from datetime import datetime, date
 from typing import Any, List, Optional
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Form
 from sqlmodel import select, desc, func
+from PIL import Image
+import io
 
 from api.deps import SessionDep, CurrentAdmin
 from models.gallery import Gallery
@@ -12,6 +14,47 @@ from models.gallery import Gallery
 router = APIRouter()
 UPLOAD_DIR = "uploads/galleries"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+MAX_IMAGE_SIZE = (1200, 1200)
+
+def process_and_save_image(upload_file: UploadFile) -> str:
+    """이미지를 리사이징하여 저장하고 경로를 반환합니다."""
+    # 파일명 생성
+    ext = os.path.splitext(upload_file.filename)[1].lower() if upload_file.filename else ".jpg"
+    if ext not in [".jpg", ".jpeg", ".png", ".webp"]:
+        ext = ".jpg" # 기본 확장자
+    
+    filename = f"{datetime.now().strftime('%Y%m%d%H%M%S%f')}{ext}"
+    file_path = os.path.join(UPLOAD_DIR, filename)
+    
+    # 이미지 열기 및 리사이징
+    image_data = upload_file.file.read()
+    try:
+        img = Image.open(io.BytesIO(image_data))
+        
+        # EXIF 정보 보존(회전 방지) 후 RGB 변환
+        try:
+            from PIL import ImageOps
+            img = ImageOps.exif_transpose(img)
+        except Exception:
+            pass
+            
+        if img.mode in ("RGBA", "P"):
+            img = img.convert("RGB")
+            
+        img.thumbnail(MAX_IMAGE_SIZE, Image.Resampling.LANCZOS)
+        
+        # 저장 (WebP나 JPEG로 품질 85)
+        save_format = "WEBP" if ext == ".webp" else "JPEG"
+        img.save(file_path, format=save_format, quality=85, optimize=True)
+        
+    except Exception as e:
+        # 이미지 처리에 실패하면 원본을 저장
+        print(f"Image resize failed: {e}")
+        with open(file_path, "wb") as buffer:
+            buffer.write(image_data)
+            
+    return f"/{file_path}"
 
 @router.get("/")
 def read_galleries(
@@ -78,10 +121,8 @@ def create_gallery(
     saved_urls = []
     for f in files:
         if f.filename:
-            file_path = os.path.join(UPLOAD_DIR, f"{datetime.now().strftime('%Y%m%d%H%M%S%f')}_{f.filename}")
-            with open(file_path, "wb") as buffer:
-                shutil.copyfileobj(f.file, buffer)
-            saved_urls.append(f"/{file_path}")
+            saved_url = process_and_save_image(f)
+            saved_urls.append(saved_url)
         
     gallery = Gallery(
         title=title,
@@ -113,10 +154,8 @@ def update_gallery(
     if new_files:
         saved_urls = []
         for f in new_files:
-            file_path = os.path.join(UPLOAD_DIR, f"{datetime.now().strftime('%Y%m%d%H%M%S%f')}_{f.filename}")
-            with open(file_path, "wb") as buffer:
-                shutil.copyfileobj(f.file, buffer)
-            saved_urls.append(f"/{file_path}")
+            saved_url = process_and_save_image(f)
+            saved_urls.append(saved_url)
         gallery.image_urls = json.dumps(saved_urls)
         
     gallery.updated_at = datetime.utcnow()
