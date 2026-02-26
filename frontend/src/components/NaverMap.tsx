@@ -68,7 +68,7 @@ export default function NaverMap() {
         <>
             <Script
                 strategy="afterInteractive"
-                src={`https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=0xv3lial21`}
+                src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=0xv3lial21`}
                 onLoad={() => setIsLoaded(true)}
             />
             {/* Map Container */}
