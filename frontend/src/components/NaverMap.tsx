@@ -36,11 +36,14 @@ export default function NaverMap() {
 
             const infoWindow = new window.naver.maps.InfoWindow({
                 content: `
-                    <div style="padding: 15px; border-radius: 8px; min-width: 200px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                        <h4 style="margin: 0 0 5px 0; font-weight: bold; font-size: 16px; color: #333;">행복한교회</h4>
-                        <p style="margin: 0 0 10px 0; font-size: 13px; color: #666;">인천 남동구 소래역남로 10<br/>5층 501-1호, 501-2호</p>
-                        <a href="https://map.naver.com/v5/search/%EC%9D%B8%EC%B2%9C%20%EB%82%A8%EB%8F%99%EA%B5%AC%20%EC%86%8C%EB%9E%98%EC%97%AD%EB%82%A8%EB%A1%9C%2010" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 6px 12px; background: #e0ac5f; color: white; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: bold;">
-                            네이버 지도 열기
+                    <div style="padding: 16px; border-radius: 8px; min-width: 260px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); background: white;">
+                        <h4 style="margin: 0 0 6px 0; font-weight: 800; font-size: 17px; color: #1f2937;">행복한교회</h4>
+                        <p style="margin: 0 0 14px 0; font-size: 13.5px; color: #4b5563; line-height: 1.6; letter-spacing: -0.02em; word-break: keep-all;">
+                            인천광역시 남동구 소래역남로 10<br/>
+                            5층 501-1호, 501-2호
+                        </p>
+                        <a href="https://map.naver.com/v5/search/%EC%9D%B8%EC%B2%9C%EA%B4%91%EC%97%AD%EC%8B%9C%20%EB%82%A8%EB%8F%99%EA%B5%AC%20%EC%86%8C%EB%9E%98%EC%97%AD%EB%82%A8%EB%A1%9C%2010" target="_blank" rel="noopener noreferrer" style="display: inline-block; width: 85%; padding: 8px 0; background-color: #d4a853; color: white; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold; transition: background-color 0.2s;">
+                            네이버 지도 크게보기
                         </a>
                     </div>
                 `,
