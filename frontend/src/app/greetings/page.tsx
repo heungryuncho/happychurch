@@ -6,9 +6,6 @@ export default function Greetings() {
     return (
         <div className="max-w-4xl mx-auto py-8 sm:py-12 px-4 sm:px-6 animate-fade-in-up">
             <div className="mb-8 sm:mb-12">
-                <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold glass text-[var(--primary)] mb-4">
-                    Welcome
-                </div>
                 <h1 className="text-3xl sm:text-4xl font-black text-gray-900">
                     <span className="gradient-text">환영인사</span>
                 </h1>
