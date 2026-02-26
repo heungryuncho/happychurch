@@ -64,7 +64,7 @@ export default function NaverMap() {
             // 스크립트 동적 생성 및 추가
             const script = document.createElement("script");
             script.id = "naver-map-script";
-            script.src = `https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=0xv3lial21`;
+            script.src = `https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=pt2xwrkpsx`;
             script.async = true;
             script.onload = initMap;
             document.head.appendChild(script);
