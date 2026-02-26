@@ -1,4 +1,4 @@
-const CACHE_NAME = 'happychurch-v1';
+const CACHE_NAME = 'happychurch-v2';
 
 // 캐싱할 정적 자원
 const STATIC_ASSETS = [
@@ -34,7 +34,9 @@ self.addEventListener('activate', (event) => {
 // 네트워크 우선, 실패 시 캐시 사용 (Network First 전략)
 self.addEventListener('fetch', (event) => {
     // API 요청이나 http/https가 아닌 요청(chrome-extension 등)은 캐싱하지 않음
-    if (event.request.url.includes('/api/') || !event.request.url.startsWith('http')) {
+    // 네이버 지도 등 외부 스크립트 도메인 요청도 Service Worker가 가로채면 Referer 증발로 인증 실패가 발생하므로 제외
+    let url = event.request.url || "";
+    if (url.includes('/api/') || url.includes('naver.com') || !url.startsWith('http')) {
         return;
     }
 
